@@ -2,12 +2,41 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
+<!-- 반드시 세미콜론 생략 -->
 <!-- <mapper namespace="com.tencoding.bank.repository.interfaces.UserRepository"> -->
 <mapper namespace="com.tenco.bankapp.repository.interfaces.UserRepository">
-	
-  <select id="findByUsernameAndPassword" resultType="com.tencoding.bank.repository.model.User">
+	<!-- sql 쿼리 매핑 / resultType 결과 매핑
+  	<select id="findByUsernameAndPassword" resultType="com.tencoding.bank.repository.model.User">
+  	동적으로 던지는 파라미터를 매핑 #
 		select * from user_tb 
 		where username = #{username} and password = #{password}
+	</select> -->
+	
+	
+	<insert id="insert">
+		<!-- interface에서 user를 던질 것 -> 파라미터 매핑 해주어야 함 -->
+		INSERT INTO user_tb(username, password, fullname, created_at)
+		<!-- VALUES ('티모', '1234', '버섯', now()); -->
+		VALUES(#{username}, #{password}, #{fullname}, now())
+	</insert>
+	
+	<update id="updateById">
+		UPDATE user_tb SET username = #{username}, password = #{password}, fullname = #{fullname} 
+		WHERE id = #{id}
+	</update>
+	
+	<delete id="deleteById">
+		DELETE FROM user_tb WHERE id = #{id}
+	</delete>
+	
+	<!-- 사용자 1명 -->
+	<!-- 위의 결과들은 Integer로 떨어져서 생략했으나 이 쿼리의 결과는 단일 행으로 떨어짐 -> resultType -->
+	<select id="findById" resultType="com.tenco.bankapp.repository.entity.User">
+		SELECT * FROM user_tb WHERE id = #{id}
 	</select>
-
+	
+	<!-- 사용자 전체 조회 -->
+	<select id="findAll" resultType="com.tenco.bankapp.repository.entity.User">
+		SELECT * FROM user_tb
+	</select>
 </mapper>
