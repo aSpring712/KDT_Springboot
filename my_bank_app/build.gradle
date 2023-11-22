@@ -22,6 +22,7 @@ repositories {
 }
 
 dependencies {
+	runtimeOnly 'com.mysql:mysql-connector-j'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -30,10 +31,12 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	
 	// 톰캣 쓰려면 반드시 써야 함
+	// JSP를 사용하기 위함
 	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
 	//JSP -> HTML 태그 안에 JAVA 문법을 쓰려고 만듦 -> java 문법 편히 쓰라고 만든 라이브러리
+	// 태그 라이브러리
 	implementation 'javax.servlet:jstl'
-	
+	// DB 접근 기술
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.3.0'
 }
 

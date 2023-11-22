@@ -1,0 +1,39 @@
+server:
+  port: 80
+  servlet:
+    encoding: 
+      charset: utf-8
+      force: true  
+      
+spring:
+  mvc:
+    view:
+      prefix: /WEB-INF/view/ # 여기에 나중에 JSP 파일들 넣을 것
+      suffix: .jsp 
+  datasource:
+    #url: jdbc:h2:mem:testdb;MODE=MySQL # 메모리 db 사용
+    #driver-class-name: org.h2.Driver
+    #username: sa
+    #password:
+    url: jdbc.mysql://localhost:3306/mybank?serverTimezone=Asia/seoul # mysql 연결
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: asd1234
+#  sql:
+#    init:
+#      schema-locations:
+#      - classpath:db/table.sql
+#      data-locations:
+#      - classpath:db/data.sql
+    
+#  h2:
+#    console:
+#      enabled: true
+#    output: 
+#      ansi: 
+#        enabled: always
+
+mybatis: # db 쿼리 날릴 때 mybatis 이용
+  mapper-locations:
+  - classpath:mapper/**.xml
+  
