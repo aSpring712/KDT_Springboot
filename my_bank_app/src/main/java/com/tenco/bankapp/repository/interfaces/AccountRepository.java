@@ -12,8 +12,8 @@ public interface AccountRepository {
 	public int insert(Account account); // 입금
 	public int updateById(Account account); // 계좌 정보 수정
 	public int deleteById(Integer id); // 계좌 정보 삭제
-	public List<Account> findAll(); // 유저가 여러 계좌를 가짐
-	public Account findById(Integer id);
+	public List<Account> findAll(); // 계좌 전체 조회
+	public Account findById(Integer id); // 계좌 id로 하나의 계좌만 조회
 	
 //	// 사용자의 유저 정보로 계좌 리스트 출력하는 기능
 //	public List<Account> findByUserId(Integer principalId); // 접근 주체
