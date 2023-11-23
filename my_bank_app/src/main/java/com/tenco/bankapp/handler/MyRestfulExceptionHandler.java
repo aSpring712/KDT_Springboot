@@ -33,7 +33,8 @@ public class MyRestfulExceptionHandler {
 	public String basicException(CustomRestfulException e) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("<script>");
-		sb.append("alert( " + e.getMessage() + " );");
+		sb.append("alert( '" + e.getMessage() + "' );");
+		sb.append("history.back();");
 		sb.append("</script>");
 		
 		return sb.toString(); // StringBuffer -> string으로 변환 : toString()
