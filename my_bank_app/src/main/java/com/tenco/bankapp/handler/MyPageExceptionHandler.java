@@ -13,7 +13,8 @@ import com.tenco.bankapp.handler.exception.CustomPageException;
  * 예외 처리 Page 리턴할 때 사용
  * */
 
-@ControllerAdvice
+@ControllerAdvice // IoC니까 메모리 떠있다가, AccountController.java에서 CustomPageException 던졌음 
+// ModelAndView로 해당 페이지에 던짐
 public class MyPageExceptionHandler {
 	
 	@ExceptionHandler(CustomPageException.class) // CustomPageException.class를 지켜볼 것
