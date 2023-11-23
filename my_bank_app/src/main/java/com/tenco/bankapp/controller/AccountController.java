@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.tenco.bankapp.handler.exception.CustomPageException;
 
-@Controller
+@Controller // View를 제공하는 controller로 설정
 @RequestMapping("/account")
 public class AccountController {
 

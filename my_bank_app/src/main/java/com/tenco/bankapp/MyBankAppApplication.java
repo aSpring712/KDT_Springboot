@@ -3,7 +3,7 @@ package com.tenco.bankapp;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
+@SpringBootApplication // Spring boot application으로 설정
 public class MyBankAppApplication {
 
 	public static void main(String[] args) {

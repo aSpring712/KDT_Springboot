@@ -11,15 +11,15 @@ import com.tenco.bankapp.dto.SignUpFormDto;
 import com.tenco.bankapp.handler.exception.CustomRestfulException;
 import com.tenco.bankapp.service.UserService;
 
-@Controller // 파일을 return 시킬 것
-@RequestMapping("/user")
+@Controller // 파일을 return 시킬 것 (View를 제공하는 controller로 설정)
+@RequestMapping("/user") // URL 주소를 맵핑
 public class UserController {
 	
 	// DI 처리 (아래 DI(의존 주입) 코드 대신)
-			@Autowired
-			private UserService userService; // 2. 포함 관계를 위한 선언
+	@Autowired
+	private UserService userService; // 2. 포함 관계를 위한 선언
 
-//			// DI(의존 주입)
+//			// DI(의존 주입) -> 아래처럼 하는 대신 위에 @Autowired
 //			public UserController(UserService userService) {
 //				this.userService = userService;
 //			}
