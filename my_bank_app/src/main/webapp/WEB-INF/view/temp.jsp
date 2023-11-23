@@ -17,13 +17,28 @@
     height: 200px;
     background: #aaa;
   }
+  .m--profile {
+  	background-image: url(https://picsum.photos/id/1/350);
+  	background-size: cover;
+  	background-position: center;
+  	width: 100%;
+  	height: 200px;
+  }
+  .banner--img {
+  	background-image: url(https://picsum.photos/600);
+  	/* cover: size만큼 펼쳐지게 */
+  	background-size: cover;
+  	background-position: center;
+  	width: 100%;
+  	height: 100%;
+  }
   </style>
 </head>
 <body>
 
-	<div class="jumbotron text-center" style="margin-bottom:0">
+	<div class="jumbotron text-center banner--img" style="margin-bottom:0">
 	  <h1>My Bank</h1>
-	  <p>Resize this responsive page to see the effect!</p> 
+	  <p>코린이 은행 관리 시스템 입니다</p> 
 	</div>
 	
 	<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
@@ -53,7 +68,8 @@
 	    <div class="col-sm-4">
 	      <h2>About Me</h2>
 	      <h5>Photo of me:</h5>
-	      <div class="fakeimg">Fake Image</div>
+	      <!-- picsum에서 가져온 이미지로 변경 -->
+	      <div class="m--profile"></div>
 	      <p>자라나는 코린이의 은행 관리 시스템</p>
 	      <h3>Some Links</h3>
 	      <p>Lorem ipsum dolor sit ame.</p>
