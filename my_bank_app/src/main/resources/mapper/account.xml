@@ -6,8 +6,8 @@
 	
 	<!-- 입금 -->
 	<insert id="insert">
-		INSERT INTO account_tb(number, balance, user_id, created_at)
-						VALUES(#{number}, #{balance}, #{userId}, now())
+		INSERT INTO account_tb(number, password, balance, user_id, created_at)
+						VALUES(#{number}, #{password}, #{balance}, #{userId}, now())
 	</insert>
 	
 	<!-- 계좌 정보 수정 -->
@@ -22,14 +22,14 @@
 		DELETE FROM account_tb WHERE id = #{id}
 	</delete>
 	
-	<!-- 계좌 전체 조회 -->
-	<select id="findAll" resultType="com.tenco.bankapp.repository.entity.Account">
-		SELECT * FROM account_tb
-	</select>
-	
 	<!-- 계좌를 계좌 id로 특정 계좌만 조회 -->
 	<select id="findById" resultType="com.tenco.bankapp.repository.entity.Account">
 		SELECT * FROM account_tb WHERE id = #{id}
+	</select>
+	
+	<!-- 계좌 전체 조회 -->
+	<select id="findAll" resultType="com.tenco.bankapp.repository.entity.Account">
+		SELECT * FROM account_tb
 	</select>
 	
 </mapper>
