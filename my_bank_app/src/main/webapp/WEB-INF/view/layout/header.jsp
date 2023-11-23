@@ -12,27 +12,9 @@
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-  <style>
-  .fakeimg {
-    height: 200px;
-    background: #aaa;
-  }
-  .m--profile {
-  	background-image: url(https://picsum.photos/id/1/350);
-  	background-size: cover;
-  	background-position: center;
-  	width: 100%;
-  	height: 200px;
-  }
-  .banner--img {
-  	background-image: url(https://picsum.photos/600);
-  	/* cover: size만큼 펼쳐지게 */
-  	background-size: cover;
-  	background-position: center;
-  	width: 100%;
-  	height: 100%;
-  }
-  </style>
+  <!-- 외부 스타일 시트 가져오기 -->
+  <link rel="stylesheet" href="/css/style.css">
+ 
 </head>
 <body>
 
