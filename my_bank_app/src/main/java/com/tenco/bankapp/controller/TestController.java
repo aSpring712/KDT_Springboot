@@ -21,4 +21,13 @@ public class TestController {
 		return "temp"; // 화면을 return
 		// suffix: .jsp
 	}
+	
+	// GET
+	// 주소 설계 - http://localhost:80/temp/main-page
+	@GetMapping("/main-page")
+	public String tempMainPage() {
+		
+		return "main";
+	}
+	
 }
