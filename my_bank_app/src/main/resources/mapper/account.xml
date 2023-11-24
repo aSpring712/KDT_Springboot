@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
+<!-- 반드시 query 끝에 세미콜론 생략 -->
 <mapper namespace="com.tenco.bankapp.repository.interfaces.AccountRepository">
 	
 	<!-- 입금 -->
