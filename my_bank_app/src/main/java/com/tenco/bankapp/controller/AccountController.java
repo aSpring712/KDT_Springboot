@@ -50,6 +50,13 @@ public class AccountController {
 		}
 		
 		List<Account> accountList = accountService.readAccountList(principal.getId());
+		
+		System.out.println("accountList : " + accountList.toString());
+		accountList.forEach((e) -> {
+			System.out.println("===========================");
+			System.out.println(e.toString());
+		});
+		
 		if(accountList.isEmpty()) {
 			model.addAttribute("accountList", null);
 		} else {
@@ -101,5 +108,21 @@ public class AccountController {
 		accountService.createAccount(dto, principal.getId());
 		
 		return "account/list";
+	}
+	
+	// 출금 페이지 요청
+	@GetMapping("/withdraw")
+	public String withdraw() {
+		
+		// 1. 인증검사 -> 매번 반복해서 해줘야 함(필터 처리도 있지만 보다 스프링 컨테이너 내에서 인터셉터 처리하기. 스프링 시큐리티를 사용하는게 아니라면)
+		User principal = (User)session.getAttribute(Define.PRINCIPAL);
+		
+		if(principal == null) {
+			throw new UnAuthorizedException("로그인 먼저 해주세요", 
+					HttpStatus.UNAUTHORIZED);
+		}
+		
+		
+		return "account/withdraw";
 	}
 }

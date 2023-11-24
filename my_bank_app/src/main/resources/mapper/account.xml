@@ -29,7 +29,7 @@
 	</select>
 	
 	<!-- 계좌를 유저 id로 조회 : 특정 유저가 가진 계좌들 조회 -->
-	<select id="findByIdUserId" resultType="com.tenco.bankapp.repository.entity.Account">
+	<select id="findByUserId" resultType="com.tenco.bankapp.repository.entity.Account">
 		SELECT * FROM account_tb WHERE user_id = #{principalId}
 	</select>
 	
