@@ -2,10 +2,12 @@ package com.tenco.bankapp.repository.interfaces;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.tenco.bankapp.repository.entity.History;
 
+@Mapper
 public interface HistoryRepository {
 	
 	// 거래내역 등록

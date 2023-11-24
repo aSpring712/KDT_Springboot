@@ -5,14 +5,14 @@
 <mapper namespace="com.tenco.bankapp.repository.interfaces.HistoryRepository">
 	
 	<!-- 거래내역 등록 -->
-	<insert id="insert">
+	<!-- <insert id="insert">
 		INSERT INTO history_tb(amount, w_account_id, d_account_id, w_balance, d_balance, created_at)
 						VALUES(#{amount}, #{wAccountId}, #{dAccountId}, #{wBalance}, #{dBalance}, now())
-	</insert>
+	</insert> -->
 	
 	<!-- 거래내역을 계좌 아이디로 조회 -->
-	<select id="findByAccountId">
+	<!-- <select id="findByAccountId">
 		SELECT * FROM history_tb WHERE w_account_id = #{} OR d_account_id = #{}
-	</select>
+	</select> -->
 	
 </mapper>

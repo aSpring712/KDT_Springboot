@@ -23,10 +23,10 @@ public class AccountService {
 	/**
 	 * 계좌 생성 기능
 	 * @param dto
-	 * @param priIntegerId
+	 * @param pricipalId
 	 */
 	@Transactional // select로 계좌 중복 여부 확인 후 중복이 아니면 생성해야 하므로 -> Transactional 걸어줌. 그리고 하나의 서비스가 됨
-	public void createAccount(SaveFormDto dto, Integer pricipalId) {
+	public void createAccount(SaveFormDto dto, Integer principalId) {
 		
 		// 계좌 중복 여부 확인
 		
@@ -35,7 +35,7 @@ public class AccountService {
 				.number(dto.getNumber())
 				.password(dto.getPassword())
 				.balance(dto.getBalance())
-				.userId(pricipalId)
+				.userId(principalId)
 				.build();
 		
 		
@@ -56,19 +56,35 @@ public class AccountService {
 	// 1. 계좌 존재 여부 확인 -> select
 	// 2. 본인 계좌 여부 확인 -> select
 	// 3. 계좌 비번 일치 여부 확인 -> select
-	// 4. 잔액 여부 확인 -> select
+	// 4. 잔액 여부 확인
 	// 5. 출금 처리 --> update
 	// 6. 거래 내역 등록 --> insert
 	// 7. 트랜잭션 처리
 	public void updateAccountWithdraw(WithdrawFormDto dto, Integer id) {
 		 
-		Account accountEntity = accountRepository.findById(id);
+		Account accountEntity = accountRepository.findByNumber(dto.getWAccountNumber());
+		
+		// 1. 계좌 존재 여부 확인
 		if(accountEntity == null) {
 			throw new CustomRestfulException("존재하지 않는 계좌입니다", HttpStatus.BAD_REQUEST);
 		}
+
+		// 2. 본인 계좌 여부 확인
+		if(accountEntity.getUserId() != id) {
+			throw new CustomRestfulException("타인의 계좌입니다", HttpStatus.BAD_REQUEST);
+		}
 		
+		// 3. 계좌 비번 일치 여부 확인
+		if(accountEntity.getPassword() != dto.getPassword()) {
+			throw new CustomRestfulException("비밀번호가 일치하지 않습니다", HttpStatus.BAD_REQUEST);
+		}
 		
+		// 4. 잔액 여부 확인
+//		if(accountEntity.getBalance() < dto.getAmount()) {
+//			
+//		}
+		System.out.println("=============!!!=============");
+		System.out.println(dto.toString());
 		
-//		return accountEntity;
 	}
 }
