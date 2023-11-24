@@ -16,7 +16,7 @@
     			</tr>
     		</thead>
     		<tbody>
-    		<!-- 일단 sample 값 -->
+    			<!-- 일단 sample 값 -->
     			<tr>
 	    			<!-- 계좌번호 -->	
     				<td>1111</td>

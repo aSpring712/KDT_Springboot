@@ -1,5 +1,7 @@
 package com.tenco.bankapp.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -23,7 +25,7 @@ public class AccountService {
 	 * @param priIntegerId
 	 */
 	@Transactional // select로 계좌 중복 여부 확인 후 중복이 아니면 생성해야 하므로 -> Transactional 걸어줌. 그리고 하나의 서비스가 됨
-	public void createAccount(SaveFormDto dto, Integer priIntegerId) {
+	public void createAccount(SaveFormDto dto, Integer pricipalId) {
 		
 		// 계좌 중복 여부 확인
 		
@@ -32,7 +34,7 @@ public class AccountService {
 				.number(dto.getNumber())
 				.password(dto.getPassword())
 				.balance(dto.getBalance())
-				.userId(priIntegerId)
+				.userId(pricipalId)
 				.build();
 		
 		
@@ -43,4 +45,9 @@ public class AccountService {
 		}
 	}
 	
+	// 계좌 목록 보기 기능
+	public List<Account> readAccountList(Integer userId) {
+		List<Account> list = accountRepository.findByUserId(userId);
+		return list;
+	}
 }

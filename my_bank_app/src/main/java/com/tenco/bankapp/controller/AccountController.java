@@ -1,10 +1,13 @@
 package com.tenco.bankapp.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.tenco.bankapp.dto.SaveFormDto;
 import com.tenco.bankapp.handler.exception.CustomRestfulException;
 import com.tenco.bankapp.handler.exception.UnAuthorizedException;
+import com.tenco.bankapp.repository.entity.Account;
 import com.tenco.bankapp.repository.entity.User;
 import com.tenco.bankapp.service.AccountService;
 import com.tenco.bankapp.utils.Define;
@@ -29,7 +33,7 @@ public class AccountController {
 	// 임시 예외 발생 확인용 http://localhost:80/account/list
 //	@GetMapping("/list")
 	@GetMapping({"/list", "/"}) // 얘는 /account/ 해도되고, /account/list 해도 되고
-	public String list() {
+	public String list(Model model) {
 		// 해당 exception을 던짐 -> MyPageExceptionHandler의 handleRuntimeException(CustomPageException e) 얘가 낚아 채서 ModelAndView로 페이지에 던짐
 		// throw new CustomPageException("페이지가 없네요~", HttpStatus.NOT_FOUND);
 		
@@ -43,6 +47,13 @@ public class AccountController {
 			// 로그인하지 않았을 때 예외처리 생성해서 적용
 			throw new UnAuthorizedException("인증된 사용자가 아닙니다", 
 					HttpStatus.UNAUTHORIZED);
+		}
+		
+		List<Account> accountList = accountService.readAccountList(principal.getId());
+		if(accountList.isEmpty()) {
+			model.addAttribute("accountList", null);
+		} else {
+			model.addAttribute("accountList", accountList); // modelAndView 타서 데이터 넘길 수 있음
 		}
 		
 		// prefix 마지에 / 붙어 있으므로
