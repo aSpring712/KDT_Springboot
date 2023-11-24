@@ -14,6 +14,7 @@ import com.tenco.bankapp.dto.SignUpFormDto;
 import com.tenco.bankapp.handler.exception.CustomRestfulException;
 import com.tenco.bankapp.repository.entity.User;
 import com.tenco.bankapp.service.UserService;
+import com.tenco.bankapp.utils.Define;
 
 @Controller // 파일을 return 시킬 것 (View를 제공하는 controller로 설정)
 @RequestMapping("/user") // URL 주소를 맵핑
@@ -30,7 +31,7 @@ public class UserController {
 	
 	// 세션
 	@Autowired
-	private HttpSession httpSession; // 선언만 했지 new 한적 없으므로 @Autowired해서 가지고 와야 함
+	private HttpSession session; // 선언만 했지 new 한적 없으므로 @Autowired해서 가지고 와야 함
 
 	// Domain 설계 할 것
 	
@@ -105,7 +106,9 @@ public class UserController {
 		// user가 처음 접근 시 JSESSIONID가 발급되며 그걸 같이 저장
 		// 3. 세션 처리
 		// 세션 : Web Container(WAS)에 cookie + session으로 세션 처리
-		httpSession.setAttribute("principal", principal); // 세션에 사용자 정보 key value값으로 저장
+//		session.setAttribute("principal", principal); // 세션에 사용자 정보 key value값으로 저장
+		// 변수의 효용 - principal은 변경하지 않을 것, 오타 많이 날 것이므로 Define
+		session.setAttribute(Define.PRINCIPAL, principal); // 세션에 사용자 정보 key value값으로 저장
 		
 		System.out.println("principal" + principal);
 		
@@ -113,5 +116,12 @@ public class UserController {
 		
 		// return redirect 는 완전히 새로운 요청
 		// 그냥 return 경로는 session이라던지 이런 정보를 가지고 감
+	}
+	
+	// 로그아웃
+	@GetMapping("/logout")
+	public String logout() {
+		session.invalidate();
+		return "redirect:/user/sign-in";
 	}
 }
