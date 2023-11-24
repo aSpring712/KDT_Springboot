@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.tenco.bankapp.handler.exception.CustomRestfulException;
+import com.tenco.bankapp.handler.exception.UnAuthorizedException;
 
 // data를 반환할 때, 예외가 발생하는 핸들러를 만들고자 함
 
@@ -34,6 +35,17 @@ public class MyRestfulExceptionHandler {
 		sb.append("<script>");
 		sb.append("alert( '" + e.getMessage() + "' );");
 		sb.append("history.back();");
+		sb.append("</script>");
+
+		return sb.toString(); // StringBuffer -> string으로 변환 : toString()
+	}
+	
+	@ExceptionHandler(UnAuthorizedException.class) // 어떨 때 호출하는가? UnAuthorizedException.class
+	public String unAuthorizedException(UnAuthorizedException e) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("<script>");
+		sb.append("alert( '" + e.getMessage() + "' );");
+		sb.append("location.href='/user/sign-in';");
 		sb.append("</script>");
 
 		return sb.toString(); // StringBuffer -> string으로 변환 : toString()
