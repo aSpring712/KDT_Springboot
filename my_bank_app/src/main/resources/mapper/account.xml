@@ -43,9 +43,5 @@
 		SELECT * FROM account_tb WHERE number = #{wAccountNumber}
 	</select>
 	
-	<!-- 본인 계좌 여부 확인 -->
-	<select id="findByNumberAndPrincipalId" resultType="com.tenco.bankapp.repository.entity.Account">
-		SELECT * FROM account_tb WHERE number = #{wAccountNumber}
-	</select>
 	
 </mapper>
