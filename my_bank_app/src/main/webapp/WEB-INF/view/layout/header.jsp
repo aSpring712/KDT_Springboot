@@ -35,11 +35,11 @@
 	      </li>
 	      <li class="nav-item">
 	      	<!-- 로그인 -->
-	        <a class="nav-link" href="#">SignIn</a>
+	        <a class="nav-link" href="/user/sign-in">SignIn</a>
 	      </li>
 	      <li class="nav-item">
 	      	<!-- 회원가입 -->
-	        <a class="nav-link" href="#">SignUp</a>
+	        <a class="nav-link" href="/user/sign-up">SignUp</a>
 	      </li>    
 	    </ul>
 	  </div>  

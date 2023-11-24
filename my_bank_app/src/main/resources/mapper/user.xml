@@ -20,6 +20,11 @@
 		delete from user_tb where id = #{id}
 	</delete>
 	
+	<!-- 로그인  com.tenco.bankapp.repository.entity.User에 결과 매핑 -->
+	<select id="findByUsernameAndPassword" resultType="com.tenco.bankapp.repository.entity.User">
+		select * from user_tb where username = #{username} AND password = #{password}
+	</select>
+	
 	<!-- 사용자 1명  -->
 	<select id="findById" resultType="com.tenco.bankapp.repository.entity.User">
 		select * from user_tb where id = #{id}

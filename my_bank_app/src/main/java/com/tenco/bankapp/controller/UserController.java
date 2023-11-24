@@ -1,5 +1,7 @@
 package com.tenco.bankapp.controller;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -7,8 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.tenco.bankapp.dto.SignInFormDto;
 import com.tenco.bankapp.dto.SignUpFormDto;
 import com.tenco.bankapp.handler.exception.CustomRestfulException;
+import com.tenco.bankapp.repository.entity.User;
 import com.tenco.bankapp.service.UserService;
 
 @Controller // 파일을 return 시킬 것 (View를 제공하는 controller로 설정)
@@ -23,6 +27,10 @@ public class UserController {
 //			public UserController(UserService userService) {
 //				this.userService = userService;
 //			}
+	
+	// 세션
+	@Autowired
+	private HttpSession httpSession; // 선언만 했지 new 한적 없으므로 @Autowired해서 가지고 와야 함
 
 	// Domain 설계 할 것
 	
@@ -76,5 +84,34 @@ public class UserController {
 		
 		// 여기서부터는 새로운 요청이므로 경로 user부터 다시 적어주어야 함
 		return "redirect:/user/sign-in"; // 로그인 페이지로 이동
+	}
+	
+	@PostMapping("/sign-in") // 자원의 요청(GET) 이지만 로그인 보안을 위해 POST
+	public String signInProc(SignInFormDto dto) {
+		// 1. Controller에 Data가 넘어왔을 때, 유효성 검사
+		if(dto.getUsername() == null || dto.getUsername().isEmpty()) {
+			throw new CustomRestfulException("username을 입력하시오", 
+					HttpStatus.BAD_REQUEST);
+		}
+		
+		if(dto.getPassword() == null || dto.getPassword().isEmpty()) {
+			throw new CustomRestfulException("password를 입력하시오", 
+					HttpStatus.BAD_REQUEST);
+		}
+		
+		// 2. 서비스 호출
+		User principal = userService.signIn(dto); // principal 접근 주체
+		
+		// user가 처음 접근 시 JSESSIONID가 발급되며 그걸 같이 저장
+		// 3. 세션 처리
+		// 세션 : Web Container(WAS)에 cookie + session으로 세션 처리
+		httpSession.setAttribute("principal", principal); // 세션에 사용자 정보 key value값으로 저장
+		
+		System.out.println("principal" + principal);
+		
+		return "/account/list";
+		
+		// return redirect 는 완전히 새로운 요청
+		// 그냥 return 경로는 session이라던지 이런 정보를 가지고 감
 	}
 }

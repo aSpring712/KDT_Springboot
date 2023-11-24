@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.tenco.bankapp.dto.SignInFormDto;
 import com.tenco.bankapp.dto.SignUpFormDto;
 import com.tenco.bankapp.handler.exception.CustomRestfulException;
 import com.tenco.bankapp.repository.entity.User;
@@ -19,7 +20,7 @@ public class UserService {
 	
 	@Transactional
 	public int signUp(SignUpFormDto dto) {
-		System.out.println(dto.toString());
+//		System.out.println(dto.toString()); // 에러 잡기 위해서 logging
 		
 		User user = User.builder()
 				.username(dto.getUsername())
@@ -39,6 +40,18 @@ public class UserService {
 		// 하나의 메서드에서 쿼리문이 select(중복검사), insert(가입) 처리가 2개 이상 작동 -> Transaction 걸어줌
 		
 		return resultRowCount;
+	}
+
+	public User signIn(SignInFormDto dto) {
+		
+		// interface에 정의해주기
+		User userEntity = userRepository.findByUsernameAndPassword(dto);
+		if(userEntity == null) {
+			throw new CustomRestfulException("아이디 혹은 비밀번호가 틀렸습니다.", 
+					HttpStatus.BAD_REQUEST);
+		}
+		
+		return userEntity;
 	}
 	
 	
