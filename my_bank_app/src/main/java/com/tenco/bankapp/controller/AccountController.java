@@ -227,7 +227,7 @@ public class AccountController {
 		}
 		
 		if(dto.getAmount() == null) {
-			throw new CustomRestfulException("금액을 입력해주세요", HttpStatus.BAD_REQUEST);
+			throw new CustomRestfulException("이체 금액을 입력하시오", HttpStatus.BAD_REQUEST);
 		}
 		
 		if(dto.getAmount().longValue() <= 0) {
@@ -235,7 +235,7 @@ public class AccountController {
 		}
 		
 		if(dto.getWAccountNumber() == null || dto.getWAccountNumber().isEmpty()) {
-			throw new CustomRestfulException("출금할 계좌번호를 입력하시오", HttpStatus.BAD_REQUEST);
+			throw new CustomRestfulException("출금 계좌번호를 입력하시오", HttpStatus.BAD_REQUEST);
 		}
 		
 		if(dto.getPassword() == null || dto.getPassword().isEmpty()) {
@@ -243,7 +243,7 @@ public class AccountController {
 		}
 	
 		if(dto.getDAccountNumber() == null || dto.getDAccountNumber().isEmpty()) {
-			throw new CustomRestfulException("입금 받을 계좌번호를 입력하시오", HttpStatus.BAD_REQUEST);
+			throw new CustomRestfulException("이체 계좌번호를 입력하시오", HttpStatus.BAD_REQUEST);
 		}
 		
 		// 서비스 호출

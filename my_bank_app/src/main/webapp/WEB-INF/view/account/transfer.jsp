@@ -25,9 +25,10 @@
 			    	placeholder="Enter password" id="password" name="password" value="1234">
 		  	</div>
 			<div class="form-group">
-				<label for="dAccountNumber">입금 받을 계좌 번호:</label>
+				<!-- 이체 받을 계좌번호 -->
+				<label for="dAccountNumber">이체 계좌 번호:</label>
 				<input type="text" class="form-control"
-				 placeholder="Enter dAccountNumber" id="dAccountNumber" name="dAccountNumber" value="3333">
+				 placeholder="Enter dAccountNumber" id="dAccountNumber" name="dAccountNumber" value="2222">
 			</div>
 				
 			<button type="submit" class="btn btn-primary">이체요청</button>

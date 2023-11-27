@@ -2,6 +2,10 @@ package com.tenco.bankapp.repository.entity;
 
 import java.sql.Timestamp;
 
+import org.springframework.http.HttpStatus;
+
+import com.tenco.bankapp.handler.exception.CustomRestfulException;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Account {
+public class Account { // 객체 지향 패러다임에 맞춰 자기 기능 구현
 	private Integer id;
 	private String number;
 	private String password;
@@ -31,8 +35,24 @@ public class Account {
 		this.balance += amount;
 	}
 	
-	// TODO - 추후 추가
 	// 패스워드 체크 기능
+	public void checkPassword(String password) {
+		if(this.password.equals(password) == false) {
+			throw new CustomRestfulException("계좌 비밀번호가 틀렸습니다", HttpStatus.BAD_REQUEST);
+		}
+	}
+	
 	// 잔액 여부 확인
+	public void checkBalance(Long balance) {
+		if(this.balance.longValue() < balance) {
+			throw new CustomRestfulException("출금 잔액이 부족합니다", HttpStatus.BAD_REQUEST);
+		}
+	}
+	
 	// 계좌 소유자 확인 기능
+	public void checkOwner(Integer principalId) {
+		if(this.userId != principalId) {
+			throw new CustomRestfulException("본인 계좌가 아닙니다", HttpStatus.BAD_REQUEST);
+		}
+	}
 }
