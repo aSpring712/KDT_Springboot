@@ -108,35 +108,40 @@ public class AccountService {
 		int resultRowCount = historyRepository.insert(history);
 		
 		if(resultRowCount != 1) {
-			throw new CustomRestfulException("정상 처리 되지 않았습니다", HttpStatus.BAD_REQUEST);
+			throw new CustomRestfulException("정상 처리 되지 않았습니다", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
+	// 입금 처리 기능
+	// 트랜젝션 처리
+	// 1. 계좌 존재 여부 확인
+	// 2. 입금 처리 -> update
+	// 3. 거래 내역 등록 처리 -> insert
 	@Transactional
-	public void updateAccountDedposit(DepositFormDto dto, Integer id) {
+	public void updateAccountDedposit(DepositFormDto dto) {
 		// 1. 계좌 존재 여부 확인
 		Account accountEntity = accountRepository.findByNumber(dto.getDAccountNumber());
 		if(accountEntity == null) {
-			throw new CustomRestfulException("해당 계좌가 없습니다", HttpStatus.BAD_REQUEST);
+			throw new CustomRestfulException("해당 계좌는 존재하지 않습니다", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
-		// 2. 입금 처리(update)
+		// 2. 입금 처리(update) - 객체 상태값 변경
 		accountEntity.deposit(dto.getAmount());
 		accountRepository.updateById(accountEntity);
 		
 		// 3. 거래 내역 등록(insert)
 		History history = new History();
 		history.setAmount(dto.getAmount());
+		history.setWBalance(null);
 		// 입금 처리
 		history.setDBalance(accountEntity.getBalance());
-		history.setWBalance(null);
-		history.setDAccountId(accountEntity.getId());
 		history.setWAccountId(null);
+		history.setDAccountId(accountEntity.getId());
 		
 		int resultRowCount = historyRepository.insert(history);
 		
 		if(resultRowCount != 1) {
-			throw new CustomRestfulException("정상 처리 되지 않았습니다", HttpStatus.BAD_REQUEST);
+			throw new CustomRestfulException("정상 처리 되지 않았습니다", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 }

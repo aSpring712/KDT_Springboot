@@ -184,7 +184,7 @@ public class AccountController {
 		}
 		
 		if(dto.getAmount() == null) {
-			throw new CustomRestfulException("금액을 입력하시오", HttpStatus.BAD_REQUEST);
+			throw new CustomRestfulException("금액을 입력해주세요", HttpStatus.BAD_REQUEST);
 		}
 		
 		if(dto.getAmount().longValue() <= 0) {
@@ -196,7 +196,7 @@ public class AccountController {
 		}
 		
 		// 서비스 호출
-		accountService.updateAccountDedposit(dto, principal.getId());
+		accountService.updateAccountDedposit(dto);
 		
 		return "redirect:/account/list";
 	}
