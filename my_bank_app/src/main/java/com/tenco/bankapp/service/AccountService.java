@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.tenco.bankapp.dto.DepositFormDto;
 import com.tenco.bankapp.dto.SaveFormDto;
+import com.tenco.bankapp.dto.TransferFormDto;
 import com.tenco.bankapp.dto.WithdrawFormDto;
 import com.tenco.bankapp.handler.exception.CustomRestfulException;
 import com.tenco.bankapp.repository.entity.Account;
@@ -144,4 +145,59 @@ public class AccountService {
 			throw new CustomRestfulException("정상 처리 되지 않았습니다", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+
+	// 이체 기능
+	@Transactional // Tx 처리
+	public void updateAccountTransfer(TransferFormDto dto, Integer principalId) {
+		// 1. 출금 계좌 존재 여부 확인
+		Account wAccountEntity = accountRepository.findByNumber(dto.getWAccountNumber());
+		if(wAccountEntity == null) {
+			throw new CustomRestfulException("존재하지 않는 계좌에서 출금하실 수 없습니다", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		// 2. 입금할 계좌 존재 여부 확인
+		Account dAccountEntity = accountRepository.findByNumber(dto.getDAccountNumber());
+		if(dAccountEntity == null) {
+			throw new CustomRestfulException("존재하지 않는 계좌로 입금하실 수 없습니다", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		// 3. 출금할 계좌가 본인 계좌가 맞는지 확인
+		if(wAccountEntity.getUserId() != principalId) {
+			throw new CustomRestfulException("본인 소유 계좌가 아닙니다", HttpStatus.UNAUTHORIZED);
+		}
+		
+		// 4. 출금 계좌 비번 일치 여부 확인	
+		if(wAccountEntity.getPassword().equals(dto.getPassword()) == false) {
+			throw new CustomRestfulException("출금 계좌 비밀번호가 틀렸습니다", HttpStatus.BAD_REQUEST);
+		}
+		
+		// 5. 출금 계좌 잔액 여부 확인
+		if(wAccountEntity.getBalance() < dto.getAmount()) {
+			throw new CustomRestfulException("계좌 잔액이 부족합니다", HttpStatus.BAD_REQUEST);
+		}
+		
+		// 6. 출금 계좌 잔액 변경
+		wAccountEntity.withdraw(dto.getAmount());
+		accountRepository.updateById(wAccountEntity);
+		
+		// 7. 입금 계좌 잔액 변경
+		dAccountEntity.deposit(dto.getAmount());
+		accountRepository.updateById(dAccountEntity);
+		
+		// 9. 거래 내역 등록 처리
+		History history = new History();
+		history.setAmount(dto.getAmount());
+		history.setWBalance(wAccountEntity.getBalance());
+		history.setDBalance(dAccountEntity.getBalance());
+		history.setWAccountId(wAccountEntity.getId());
+		history.setDAccountId(dAccountEntity.getId());
+		
+		int resultRowCount = historyRepository.insert(history);
+		
+		if(resultRowCount != 1) {
+			throw new CustomRestfulException("정상 처리 되지 않았습니다", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	
 }

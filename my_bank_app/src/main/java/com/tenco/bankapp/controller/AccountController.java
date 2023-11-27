@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.tenco.bankapp.dto.DepositFormDto;
 import com.tenco.bankapp.dto.SaveFormDto;
+import com.tenco.bankapp.dto.TransferFormDto;
 import com.tenco.bankapp.dto.WithdrawFormDto;
 import com.tenco.bankapp.handler.exception.CustomRestfulException;
 import com.tenco.bankapp.handler.exception.UnAuthorizedException;
@@ -197,6 +198,56 @@ public class AccountController {
 		
 		// 서비스 호출
 		accountService.updateAccountDedposit(dto);
+		
+		return "redirect:/account/list";
+	}
+	
+	// 출금 페이지 요청
+	@GetMapping("/transfer")
+	public String transfer() {
+		// 1. 인증검사 -> 매번 반복해서 해줘야 함(필터 처리도 있지만 보다 스프링 컨테이너 내에서 인터셉터 처리하기. 스프링 시큐리티를 사용하는게 아니라면)
+		User principal = (User)session.getAttribute(Define.PRINCIPAL);
+		
+		if(principal == null) {
+			throw new UnAuthorizedException("로그인 먼저 해주세요", 
+					HttpStatus.UNAUTHORIZED);
+		}
+		
+		return "account/transfer";
+	}
+	
+	// 이체 처리
+	@PostMapping("/transfer")
+	public String transferProc(TransferFormDto dto) {
+		User principal = (User)session.getAttribute(Define.PRINCIPAL);
+		
+		if(principal == null) {
+			throw new UnAuthorizedException("로그인 먼저 해주세요", 
+					HttpStatus.UNAUTHORIZED);
+		}
+		
+		if(dto.getAmount() == null) {
+			throw new CustomRestfulException("금액을 입력해주세요", HttpStatus.BAD_REQUEST);
+		}
+		
+		if(dto.getAmount().longValue() <= 0) {
+			throw new CustomRestfulException("이체 금액이 0원 이하일 수 없습니다", HttpStatus.BAD_REQUEST);
+		}
+		
+		if(dto.getWAccountNumber() == null || dto.getWAccountNumber().isEmpty()) {
+			throw new CustomRestfulException("출금할 계좌번호를 입력하시오", HttpStatus.BAD_REQUEST);
+		}
+		
+		if(dto.getPassword() == null || dto.getPassword().isEmpty()) {
+			throw new CustomRestfulException("비밀 번호를 입력하시오", HttpStatus.BAD_REQUEST);
+		}
+	
+		if(dto.getDAccountNumber() == null || dto.getDAccountNumber().isEmpty()) {
+			throw new CustomRestfulException("입금 받을 계좌번호를 입력하시오", HttpStatus.BAD_REQUEST);
+		}
+		
+		// 서비스 호출
+		accountService.updateAccountTransfer(dto, principal.getId());
 		
 		return "redirect:/account/list";
 	}
