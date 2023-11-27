@@ -11,13 +11,19 @@ import com.tenco.bankapp.dto.SaveFormDto;
 import com.tenco.bankapp.dto.WithdrawFormDto;
 import com.tenco.bankapp.handler.exception.CustomRestfulException;
 import com.tenco.bankapp.repository.entity.Account;
+import com.tenco.bankapp.repository.entity.History;
 import com.tenco.bankapp.repository.interfaces.AccountRepository;
+import com.tenco.bankapp.repository.interfaces.HistoryRepository;
 
 @Service // IoC 대상 + 싱글톤 관리
 public class AccountService {
 	
 	@Autowired
 	private AccountRepository accountRepository;
+	
+	@Autowired
+	private HistoryRepository historyRepository; // 추상(interface)으로 의존 -> SOLID 원칙의 DIP 원칙?
+	
 
 	
 	/**
@@ -60,31 +66,50 @@ public class AccountService {
 	// 5. 출금 처리 --> update
 	// 6. 거래 내역 등록 --> insert
 	// 7. 트랜잭션 처리
-	public void updateAccountWithdraw(WithdrawFormDto dto, Integer id) {
+	@Transactional
+	public void updateAccountWithdraw(WithdrawFormDto dto, Integer principalId) {
 		 
 		Account accountEntity = accountRepository.findByNumber(dto.getWAccountNumber());
 		
+		// TODO 내 코드
+		
 		// 1. 계좌 존재 여부 확인
 		if(accountEntity == null) {
-			throw new CustomRestfulException("존재하지 않는 계좌입니다", HttpStatus.BAD_REQUEST);
+			throw new CustomRestfulException("해당 계좌가 없습니다", HttpStatus.BAD_REQUEST);
 		}
 
 		// 2. 본인 계좌 여부 확인
-		if(accountEntity.getUserId() != id) {
-			throw new CustomRestfulException("타인의 계좌입니다", HttpStatus.BAD_REQUEST);
+		if(accountEntity.getUserId() != principalId) {
+			throw new CustomRestfulException("본인 소유 계좌가 아닙니다", HttpStatus.UNAUTHORIZED);
 		}
 		
 		// 3. 계좌 비번 일치 여부 확인
-		if(accountEntity.getPassword() != dto.getPassword()) {
-			throw new CustomRestfulException("비밀번호가 일치하지 않습니다", HttpStatus.BAD_REQUEST);
+		if(accountEntity.getPassword().equals(dto.getPassword()) == false) {
+			throw new CustomRestfulException("출금 계좌 비밀번호가 틀렸습니다", HttpStatus.BAD_REQUEST);
 		}
 		
 		// 4. 잔액 여부 확인
-//		if(accountEntity.getBalance() < dto.getAmount()) {
-//			
-//		}
-		System.out.println("=============!!!=============");
-		System.out.println(dto.toString());
+		if(accountEntity.getBalance() < dto.getAmount()) {
+			throw new CustomRestfulException("계좌 잔액이 부족합니다", HttpStatus.BAD_REQUEST);
+		}
 		
+		// 5. 출금 처리(Update) (객체 모델 상태값 변경 처리)
+		accountEntity.withdraw(dto.getAmount());
+		accountRepository.updateById(accountEntity);
+		
+		// 6. 거래 내역 등록
+		History history = new History();
+		history.setAmount(dto.getAmount());
+		// 출금 처리이므로 출금 거래 내역에는 사용자가 출금 후에 잔액을 입력합니다. (d_balance에 null값 -> 출금, w_balance null -> 입금, 둘 다 null이 아니면 -> 이체)
+		history.setWBalance(accountEntity.getBalance());
+		history.setDBalance(null); // null 값
+		history.setWAccountId(accountEntity.getId());
+		history.setDAccountId(null);
+		
+		int resultRowCount = historyRepository.insert(history);
+		
+		if(resultRowCount != 1) {
+			throw new CustomRestfulException("정상 처리 되지 않았습니다", HttpStatus.BAD_REQUEST);
+		}
 	}
 }

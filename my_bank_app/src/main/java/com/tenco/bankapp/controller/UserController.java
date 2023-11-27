@@ -112,7 +112,7 @@ public class UserController {
 		
 		System.out.println("principal" + principal);
 		
-		return "/account/list";
+		return "redirect:/account/list";
 		
 		// return redirect 는 완전히 새로운 요청
 		// 그냥 return 경로는 session이라던지 이런 정보를 가지고 감

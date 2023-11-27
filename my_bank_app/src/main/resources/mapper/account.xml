@@ -38,10 +38,14 @@
 		SELECT * FROM account_tb
 	</select>
 	
-	<!-- TODO 내 코드 : 계좌 번호로 조회 -->
+	<!-- 계좌 번호로 조회 -->
 	<select id="findByNumber" resultType="com.tenco.bankapp.repository.entity.Account">
-		SELECT * FROM account_tb WHERE number = #{wAccountNumber}
+		SELECT * FROM account_tb WHERE number = #{number}
 	</select>
 	
+	<!-- TODO 내 코드 : 출금 처리 -->
+	<!-- <update id="withdrawByNumber">
+		UPDATE account_tb SET balance = #{balance} WHERE number = #{wAccountNumber} AND user_id = #{principalId}
+	</update> -->
 	
 </mapper>

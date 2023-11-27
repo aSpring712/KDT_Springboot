@@ -5,14 +5,30 @@
 <mapper namespace="com.tenco.bankapp.repository.interfaces.HistoryRepository">
 	
 	<!-- 거래내역 등록 -->
-	<!-- <insert id="insert">
-		INSERT INTO history_tb(amount, w_account_id, d_account_id, w_balance, d_balance, created_at)
-						VALUES(#{amount}, #{wAccountId}, #{dAccountId}, #{wBalance}, #{dBalance}, now())
-	</insert> -->
+	<!-- insert 시 파라미터 지정 가능(com.tenco.bankapp.repository.entity.History) 그러나 결과 int로 떨어지니까 int로 설정 -->
+	<insert id="insert" parameterType="com.tenco.bankapp.repository.entity.History">
+		INSERT INTO history_tb(amount, w_balance, d_balance, w_account_id, d_account_id)
+						VALUES(#{amount}, #{wBalance}, #{dBalance}, #{wAccountId}, #{dAccountId})
+	</insert>
 	
-	<!-- 거래내역을 계좌 아이디로 조회 -->
-	<!-- <select id="findByAccountId">
-		SELECT * FROM history_tb WHERE w_account_id = #{} OR d_account_id = #{}
-	</select> -->
+	<!-- 계좌 id로 삭제 -->
+	<delete id="deleteById" parameterType="int">
+		DELETE FROM history_tb WHERE id = #{id}
+	</delete>
+	
+	<!-- 계좌 id로 update -->
+	<update id="updateById">
+		UPDATE history_tb 
+		SET amount = #{amount}, 
+			w_balance = #{wBalance}, 
+			d_balance = #{dBalance}
+		WHERE id = #{id} 
+	</update>
+	
+	<select id="findAll" resultType="com.tenco.bankapp.repository.entity.History">
+		SELECT * FROM history_tb
+	</select>
+	
+	<!-- 동적 쿼리 생성 예정 -->
 	
 </mapper>
