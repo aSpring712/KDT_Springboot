@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.tenco.bankapp.dto.DepositFormDto;
 import com.tenco.bankapp.dto.SaveFormDto;
 import com.tenco.bankapp.dto.WithdrawFormDto;
 import com.tenco.bankapp.handler.exception.CustomRestfulException;
@@ -154,6 +155,48 @@ public class AccountController {
 		
 		// 서비스 호출
 		accountService.updateAccountWithdraw(dto, principal.getId());
+		
+		return "redirect:/account/list";
+	}
+	
+	// 입금 페이지 요청
+	@GetMapping("/deposit")
+	public String deposit() {
+		// 1. 인증검사 -> 매번 반복해서 해줘야 함(필터 처리도 있지만 보다 스프링 컨테이너 내에서 인터셉터 처리하기. 스프링 시큐리티를 사용하는게 아니라면)
+		User principal = (User)session.getAttribute(Define.PRINCIPAL);
+		
+		if(principal == null) {
+			throw new UnAuthorizedException("로그인 먼저 해주세요", 
+					HttpStatus.UNAUTHORIZED);
+		}
+		
+		return "account/deposit";
+	}
+	
+	// 입금 처리
+	@PostMapping("/deposit")
+	public String depositProc(DepositFormDto dto) {
+		User principal = (User)session.getAttribute(Define.PRINCIPAL);
+		
+		if(principal == null) {
+			throw new UnAuthorizedException("로그인 먼저 해주세요", 
+					HttpStatus.UNAUTHORIZED);
+		}
+		
+		if(dto.getAmount() == null) {
+			throw new CustomRestfulException("금액을 입력하시오", HttpStatus.BAD_REQUEST);
+		}
+		
+		if(dto.getAmount().longValue() <= 0) {
+			throw new CustomRestfulException("입금 금액이 0원 이하일 수 없습니다", HttpStatus.BAD_REQUEST);
+		}
+	
+		if(dto.getDAccountNumber() == null || dto.getDAccountNumber().isEmpty()) {
+			throw new CustomRestfulException("계좌 번호를 입력하시오", HttpStatus.BAD_REQUEST);
+		}
+		
+		// 서비스 호출
+		accountService.updateAccountDedposit(dto, principal.getId());
 		
 		return "redirect:/account/list";
 	}

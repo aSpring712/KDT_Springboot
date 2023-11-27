@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.tenco.bankapp.dto.DepositFormDto;
 import com.tenco.bankapp.dto.SaveFormDto;
 import com.tenco.bankapp.dto.WithdrawFormDto;
 import com.tenco.bankapp.handler.exception.CustomRestfulException;
@@ -71,8 +72,6 @@ public class AccountService {
 		 
 		Account accountEntity = accountRepository.findByNumber(dto.getWAccountNumber());
 		
-		// TODO 내 코드
-		
 		// 1. 계좌 존재 여부 확인
 		if(accountEntity == null) {
 			throw new CustomRestfulException("해당 계좌가 없습니다", HttpStatus.BAD_REQUEST);
@@ -105,6 +104,34 @@ public class AccountService {
 		history.setDBalance(null); // null 값
 		history.setWAccountId(accountEntity.getId());
 		history.setDAccountId(null);
+		
+		int resultRowCount = historyRepository.insert(history);
+		
+		if(resultRowCount != 1) {
+			throw new CustomRestfulException("정상 처리 되지 않았습니다", HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@Transactional
+	public void updateAccountDedposit(DepositFormDto dto, Integer id) {
+		// 1. 계좌 존재 여부 확인
+		Account accountEntity = accountRepository.findByNumber(dto.getDAccountNumber());
+		if(accountEntity == null) {
+			throw new CustomRestfulException("해당 계좌가 없습니다", HttpStatus.BAD_REQUEST);
+		}
+		
+		// 2. 입금 처리(update)
+		accountEntity.deposit(dto.getAmount());
+		accountRepository.updateById(accountEntity);
+		
+		// 3. 거래 내역 등록(insert)
+		History history = new History();
+		history.setAmount(dto.getAmount());
+		// 입금 처리
+		history.setDBalance(accountEntity.getBalance());
+		history.setWBalance(null);
+		history.setDAccountId(accountEntity.getId());
+		history.setWAccountId(null);
 		
 		int resultRowCount = historyRepository.insert(history);
 		

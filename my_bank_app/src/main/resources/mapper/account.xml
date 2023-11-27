@@ -43,9 +43,4 @@
 		SELECT * FROM account_tb WHERE number = #{number}
 	</select>
 	
-	<!-- TODO 내 코드 : 출금 처리 -->
-	<!-- <update id="withdrawByNumber">
-		UPDATE account_tb SET balance = #{balance} WHERE number = #{wAccountNumber} AND user_id = #{principalId}
-	</update> -->
-	
 </mapper>
