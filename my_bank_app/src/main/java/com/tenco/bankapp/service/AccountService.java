@@ -181,10 +181,12 @@ public class AccountService {
 		
 		// 6. 출금 계좌 잔액 변경
 		withdrawAccountEntity.withdraw(dto.getAmount());
+		// update 처리
 		accountRepository.updateById(withdrawAccountEntity);
 		
 		// 7. 입금 계좌 잔액 변경
 		depositAccountEntity.deposit(dto.getAmount());
+		// update 처리
 		accountRepository.updateById(depositAccountEntity);
 		
 		// 9. 거래 내역 등록 처리

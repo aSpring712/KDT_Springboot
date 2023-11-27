@@ -1,6 +1,10 @@
 <!-- JSP 문법 -->
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+  	<!-- jstl 사용을 위해 -->
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+	<!-- 이 페이지 랜더링 시 User Entity를 가지고 오라는 말 -->
+<%@ page import="com.tenco.bankapp.repository.entity.User" %>
 <!-- JSP 문법 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -33,14 +37,26 @@
 	      <li class="nav-item">
 	        <a class="nav-link" href="#">Home</a>
 	      </li>
-	      <li class="nav-item">
-	      	<!-- 로그인 -->
-	        <a class="nav-link" href="/user/sign-in">SignIn</a>
-	      </li>
-	      <li class="nav-item">
-	      	<!-- 회원가입 -->
-	        <a class="nav-link" href="/user/sign-up">SignUp</a>
-	      </li>    
+	      
+	      <!-- 세션 여부에 따라서 header 노출 다르게 처리 -->
+	      <c:choose>
+	      	<c:when test="${principal != null}">
+			      <li class="nav-item">
+			      	<!-- 로그아웃 -->
+			        <a class="nav-link" href="/user/logout">logout</a>
+			      </li>
+		      </c:when>
+		      <c:otherwise>
+		      	<li class="nav-item">
+			      	<!-- 로그인 -->
+			        <a class="nav-link" href="/user/sign-in">SignIn</a>
+			      </li>
+			      <li class="nav-item">
+			      	<!-- 회원가입 -->
+			        <a class="nav-link" href="/user/sign-up">SignUp</a>
+		      	</li>
+		      </c:otherwise>
+	      </c:choose>
 	    </ul>
 	  </div>  
 	</nav>
