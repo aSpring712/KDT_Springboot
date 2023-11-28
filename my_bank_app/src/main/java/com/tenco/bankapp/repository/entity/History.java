@@ -1,6 +1,9 @@
 package com.tenco.bankapp.repository.entity;
 
+import java.sql.Date;
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,4 +30,18 @@ public class History {
 	private String sender;
 	private String receiver;
 	private Long balance;
+	
+	// 시간
+	public String formatCreatedAt() {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		return simpleDateFormat.format(createdAt);
+	}
+	
+	public String formatBalance() {
+		// data format class 활용해 천 단위에 쉼표 찍는 기능을 구현하시오
+		// 1,000원
+		DecimalFormat df = new DecimalFormat("###,###");
+		String formatNumber = df.format(balance);
+		return formatNumber + "원";
+	}
 }

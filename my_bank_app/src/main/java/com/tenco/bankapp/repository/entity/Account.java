@@ -1,6 +1,7 @@
 package com.tenco.bankapp.repository.entity;
 
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 
 import org.springframework.http.HttpStatus;
 
@@ -54,5 +55,13 @@ public class Account { // 객체 지향 패러다임에 맞춰 자기 기능 구
 		if(this.userId != principalId) {
 			throw new CustomRestfulException("본인 계좌가 아닙니다", HttpStatus.BAD_REQUEST);
 		}
+	}
+	
+	public String formatBalance() {
+		// data format class 활용해 천 단위에 쉼표 찍는 기능을 구현하시오
+		// 1,000원
+		DecimalFormat df = new DecimalFormat("#,###");
+		String formatNumber = df.format(balance);
+		return formatNumber + "원";
 	}
 }

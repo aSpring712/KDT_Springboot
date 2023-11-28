@@ -25,7 +25,7 @@
 									<tr>
 									
 										<td><a href="/account/detail/${account.id}">${ account.number }</a></td>
-										<td>${ account.balance }</td>
+										<td>${ account.formatBalance() }</td>
 									</tr>
 								</c:forEach>
 		

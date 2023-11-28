@@ -16,7 +16,7 @@
 				<div class="user--box">
 					${principal.username} 님 계좌<br>
 					계좌 번호 : ${account.number}<br>
-					잔액 : ${account.balance} 원
+					잔액 : ${account.formatBalance()}
 				</div>
 				
 				<br>
@@ -46,11 +46,11 @@
 							<tbody>
 								<c:forEach var="history" items="${historyList}">
 									<tr>
-										<td>${history.createdAt}</td>
+										<td>${history.formatCreatedAt()}</td>
 										<td>${history.sender}</td>
 										<td>${history.receiver}</td>
-										<td>${history.amount}</td>
-										<td>${history.balance}원</td>
+										<td>${history.formatBalance()}</td>
+										<td>${history.formatBalance()}</td>
 									</tr>
 								</c:forEach>
 							</tbody>
