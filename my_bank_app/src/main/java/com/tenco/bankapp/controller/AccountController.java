@@ -49,12 +49,13 @@ public class AccountController {
 //		User principal = (User)session.getAttribute("principal");
 		User principal = (User)session.getAttribute(Define.PRINCIPAL);
 		
-		if(principal == null) {
-			// throw new CustomRestfulException("인증된 사용자가 아닙니다",
-			// 로그인하지 않았을 때 예외처리 생성해서 적용
-			throw new UnAuthorizedException("인증된 사용자가 아닙니다", 
-					HttpStatus.UNAUTHORIZED);
-		}
+		// ! 인증검사 안하고있음!!! -> interceptor에서 가로채서 검사
+//		if(principal == null) {
+//			// throw new CustomRestfulException("인증된 사용자가 아닙니다",
+//			// 로그인하지 않았을 때 예외처리 생성해서 적용
+//			throw new UnAuthorizedException("인증된 사용자가 아닙니다", 
+//					HttpStatus.UNAUTHORIZED);
+//		}
 		
 		List<Account> accountList = accountService.readAccountList(principal.getId());
 		
