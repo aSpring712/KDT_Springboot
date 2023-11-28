@@ -18,7 +18,7 @@ public interface HistoryRepository {
 	public int deleteById(Integer id);
 	// 전체 조회
 	public List<History> findAll();
-	public List<History> findByIdAndDynamicType(@Param("type") String type, @Param("id") Integer id);
+	public List<History> findByIdAndDynamicType(@Param("type") String type, @Param("accountId") Integer accountId);
 	
 	// 계좌 거래내역 조회 -> 동적으로 만들 것이므로 주석 처리
 //	public List<History> findByAccountId(String id);

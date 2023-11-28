@@ -9,8 +9,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.tenco.bankapp.dto.DepositFormDto;
 import com.tenco.bankapp.dto.SaveFormDto;
@@ -19,7 +21,9 @@ import com.tenco.bankapp.dto.WithdrawFormDto;
 import com.tenco.bankapp.handler.exception.CustomRestfulException;
 import com.tenco.bankapp.handler.exception.UnAuthorizedException;
 import com.tenco.bankapp.repository.entity.Account;
+import com.tenco.bankapp.repository.entity.History;
 import com.tenco.bankapp.repository.entity.User;
+import com.tenco.bankapp.repository.interfaces.AccountRepository;
 import com.tenco.bankapp.service.AccountService;
 import com.tenco.bankapp.utils.Define;
 
@@ -250,5 +254,35 @@ public class AccountController {
 		accountService.updateAccountTransfer(dto, principal.getId());
 		
 		return "redirect:/account/list";
+	}
+	
+	// 계좌 상세보기 화면 요청 처리 - 데이터를 입력 받는 방법 정리
+	// http://localhost/account/detail/1  -> pathVariable : @PathVariable
+	// http://localhost/account/detail/1?type=deposit -> Query String : @RequestParam
+	// http://localhost/account/detail/1?type=withdraw
+	// request param에 기본값 세팅 가능
+	@GetMapping("/detail/{accountId}") // 주소에서 넘겨받은 값을 method 안에서 사용해야 함
+	public String detail(@PathVariable Integer accountId, 
+			@RequestParam(name = "type", defaultValue = "all", required = false) String type, // defaultValue있을 시 반드시 required true or false 값 주어야 함
+			Model model) { // jsp에 데이터 내려주기 위해 사용
+		
+		// 인증검사, 유효성 검사
+		User principal = (User)session.getAttribute(Define.PRINCIPAL);
+		if(principal == null) {
+			throw new UnAuthorizedException("로그인 먼저 해주세요", 
+					HttpStatus.UNAUTHORIZED);
+		}
+		
+		// 상세 보기 화면 요청시 --> 데이터를 내려주어야 한다.
+		// account 데이터, 정근주체(principalId), 거래내역 정보
+		Account account = accountService.findById(accountId); // 하나의 계좌에 대한 정보가 필요
+		List<History> historyList = accountService.readHistoryListByAccount(type, accountId);
+		
+		// JSP에 넘겨주기
+		model.addAttribute(Define.PRINCIPAL, principal);
+		model.addAttribute("account", account);
+		model.addAttribute("historyList", historyList);
+		
+		return "account/detail";
 	}
 }
