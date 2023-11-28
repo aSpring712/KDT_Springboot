@@ -6,6 +6,7 @@ import java.text.DecimalFormat;
 import org.springframework.http.HttpStatus;
 
 import com.tenco.bankapp.handler.exception.CustomRestfulException;
+import com.tenco.bankapp.utils.decimalUtil;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -60,8 +61,9 @@ public class Account { // 객체 지향 패러다임에 맞춰 자기 기능 구
 	public String formatBalance() {
 		// data format class 활용해 천 단위에 쉼표 찍는 기능을 구현하시오
 		// 1,000원
-		DecimalFormat df = new DecimalFormat("#,###");
-		String formatNumber = df.format(balance);
-		return formatNumber + "원";
+//		DecimalFormat df = new DecimalFormat("#,###");
+//		String formatNumber = df.format(balance);
+//		return formatNumber + "원";
+		return decimalUtil.decimalToString(balance);
 	}
 }

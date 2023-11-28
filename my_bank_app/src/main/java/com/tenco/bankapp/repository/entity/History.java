@@ -5,6 +5,9 @@ import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 
+import com.tenco.bankapp.utils.TimeStampUtil;
+import com.tenco.bankapp.utils.decimalUtil;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -33,15 +36,17 @@ public class History {
 	
 	// 시간
 	public String formatCreatedAt() {
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		return simpleDateFormat.format(createdAt);
+//		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//		return simpleDateFormat.format(createdAt);
+		return TimeStampUtil.timestampToString(createdAt);
 	}
 	
 	public String formatBalance() {
 		// data format class 활용해 천 단위에 쉼표 찍는 기능을 구현하시오
 		// 1,000원
-		DecimalFormat df = new DecimalFormat("###,###");
-		String formatNumber = df.format(balance);
-		return formatNumber + "원";
+//		DecimalFormat df = new DecimalFormat("###,###");
+//		String formatNumber = df.format(balance);
+//		return formatNumber + "원";
+		return decimalUtil.decimalToString(balance);
 	}
 }
