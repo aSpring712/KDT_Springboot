@@ -78,12 +78,11 @@ public class AccountController {
 	
 	@GetMapping("/save")
 	public String save() {
-		User principal = (User)session.getAttribute(Define.PRINCIPAL);
-		
-		if(principal == null) {
-			throw new UnAuthorizedException("로그인 먼저 해주세요", 
-					HttpStatus.UNAUTHORIZED);
-		}
+//		User principal = (User)session.getAttribute(Define.PRINCIPAL);
+//		if(principal == null) {
+//			throw new UnAuthorizedException("로그인 먼저 해주세요", 
+//					HttpStatus.UNAUTHORIZED);
+//		}
 		
 		return "account/save";
 	}
@@ -94,10 +93,10 @@ public class AccountController {
 		// 1. 인증검사 -> 매번 반복해서 해줘야 함(필터 처리도 있지만 보다 스프링 컨테이너 내에서 인터셉터 처리하기. 스프링 시큐리티를 사용하는게 아니라면)
 		User principal = (User)session.getAttribute(Define.PRINCIPAL);
 		
-		if(principal == null) {
-			throw new UnAuthorizedException("로그인 먼저 해주세요", 
-					HttpStatus.UNAUTHORIZED);
-		}
+//		if(principal == null) {
+//			throw new UnAuthorizedException("로그인 먼저 해주세요", 
+//					HttpStatus.UNAUTHORIZED);
+//		}
 		
 		// 2. 유효성 검사
 		if(dto.getNumber() == null || dto.getNumber().isEmpty()) {
@@ -123,12 +122,12 @@ public class AccountController {
 	public String withdraw() {
 		
 		// 1. 인증검사 -> 매번 반복해서 해줘야 함(필터 처리도 있지만 보다 스프링 컨테이너 내에서 인터셉터 처리하기. 스프링 시큐리티를 사용하는게 아니라면)
-		User principal = (User)session.getAttribute(Define.PRINCIPAL);
+//		User principal = (User)session.getAttribute(Define.PRINCIPAL);
 		
-		if(principal == null) {
-			throw new UnAuthorizedException("로그인 먼저 해주세요", 
-					HttpStatus.UNAUTHORIZED);
-		}
+//		if(principal == null) {
+//			throw new UnAuthorizedException("로그인 먼저 해주세요", 
+//					HttpStatus.UNAUTHORIZED);
+//		}
 		
 		
 		return "account/withdraw";
@@ -138,10 +137,10 @@ public class AccountController {
 	public String withdrawProc(WithdrawFormDto dto) {
 		User principal = (User)session.getAttribute(Define.PRINCIPAL);
 		
-		if(principal == null) {
-			throw new UnAuthorizedException("로그인 먼저 해주세요", 
-					HttpStatus.UNAUTHORIZED);
-		}
+//		if(principal == null) {
+//			throw new UnAuthorizedException("로그인 먼저 해주세요", 
+//					HttpStatus.UNAUTHORIZED);
+//		}
 		
 		if(dto.getAmount() == null) {
 			throw new CustomRestfulException("금액을 입력하시오", HttpStatus.BAD_REQUEST);
@@ -169,12 +168,12 @@ public class AccountController {
 	@GetMapping("/deposit")
 	public String deposit() {
 		// 1. 인증검사 -> 매번 반복해서 해줘야 함(필터 처리도 있지만 보다 스프링 컨테이너 내에서 인터셉터 처리하기. 스프링 시큐리티를 사용하는게 아니라면)
-		User principal = (User)session.getAttribute(Define.PRINCIPAL);
-		
-		if(principal == null) {
-			throw new UnAuthorizedException("로그인 먼저 해주세요", 
-					HttpStatus.UNAUTHORIZED);
-		}
+//		User principal = (User)session.getAttribute(Define.PRINCIPAL);
+//		
+//		if(principal == null) {
+//			throw new UnAuthorizedException("로그인 먼저 해주세요", 
+//					HttpStatus.UNAUTHORIZED);
+//		}
 		
 		return "account/deposit";
 	}
@@ -182,12 +181,12 @@ public class AccountController {
 	// 입금 처리
 	@PostMapping("/deposit")
 	public String depositProc(DepositFormDto dto) {
-		User principal = (User)session.getAttribute(Define.PRINCIPAL);
-		
-		if(principal == null) {
-			throw new UnAuthorizedException("로그인 먼저 해주세요", 
-					HttpStatus.UNAUTHORIZED);
-		}
+//		User principal = (User)session.getAttribute(Define.PRINCIPAL);
+//		
+//		if(principal == null) {
+//			throw new UnAuthorizedException("로그인 먼저 해주세요", 
+//					HttpStatus.UNAUTHORIZED);
+//		}
 		
 		if(dto.getAmount() == null) {
 			throw new CustomRestfulException("금액을 입력해주세요", HttpStatus.BAD_REQUEST);
@@ -211,12 +210,12 @@ public class AccountController {
 	@GetMapping("/transfer")
 	public String transfer() {
 		// 1. 인증검사 -> 매번 반복해서 해줘야 함(필터 처리도 있지만 보다 스프링 컨테이너 내에서 인터셉터 처리하기. 스프링 시큐리티를 사용하는게 아니라면)
-		User principal = (User)session.getAttribute(Define.PRINCIPAL);
-		
-		if(principal == null) {
-			throw new UnAuthorizedException("로그인 먼저 해주세요", 
-					HttpStatus.UNAUTHORIZED);
-		}
+//		User principal = (User)session.getAttribute(Define.PRINCIPAL);
+//		
+//		if(principal == null) {
+//			throw new UnAuthorizedException("로그인 먼저 해주세요", 
+//					HttpStatus.UNAUTHORIZED);
+//		}
 		
 		return "account/transfer";
 	}
@@ -226,10 +225,10 @@ public class AccountController {
 	public String transferProc(TransferFormDto dto) {
 		User principal = (User)session.getAttribute(Define.PRINCIPAL);
 		
-		if(principal == null) {
-			throw new UnAuthorizedException("로그인 먼저 해주세요", 
-					HttpStatus.UNAUTHORIZED);
-		}
+//		if(principal == null) {
+//			throw new UnAuthorizedException("로그인 먼저 해주세요", 
+//					HttpStatus.UNAUTHORIZED);
+//		}
 		
 		if(dto.getAmount() == null) {
 			throw new CustomRestfulException("이체 금액을 입력하시오", HttpStatus.BAD_REQUEST);
@@ -269,10 +268,10 @@ public class AccountController {
 		
 		// 인증검사, 유효성 검사
 		User principal = (User)session.getAttribute(Define.PRINCIPAL);
-		if(principal == null) {
-			throw new UnAuthorizedException("로그인 먼저 해주세요", 
-					HttpStatus.UNAUTHORIZED);
-		}
+//		if(principal == null) {
+//			throw new UnAuthorizedException("로그인 먼저 해주세요", 
+//					HttpStatus.UNAUTHORIZED);
+//		}
 		
 		// 상세 보기 화면 요청시 --> 데이터를 내려주어야 한다.
 		// account 데이터, 정근주체(principalId), 거래내역 정보
@@ -286,4 +285,4 @@ public class AccountController {
 		
 		return "account/detail";
 	}
-}
+} 
