@@ -1,5 +1,8 @@
 package com.tenco.bankapp.controller;
 
+import java.io.File;
+import java.util.UUID;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.tenco.bankapp.dto.SignInFormDto;
 import com.tenco.bankapp.dto.SignUpFormDto;
@@ -79,10 +83,60 @@ public class UserController {
 		
 		// 2. 일 하라고 Service에 던지기(위임 -> userController가 userService를 가지고 있어야 함 -> 포함 관계)
 
-		int resultRowCount = userService.signUp(dto);
-		if(resultRowCount != 1) {
-			// 다른 처리
+		// 사용자 프로필 이미지 등록 처리
+		MultipartFile file = dto.getFile();
+		// 등록된 파일이 있다면
+		if(file.isEmpty() == false) {
+			// 파일 사이즈 체크
+			if(file.getSize() > Define.MAX_FILE_SIZE) {
+				throw new CustomRestfulException("파일 크기는 20MB 이상 클 수 없어요", 
+						HttpStatus.BAD_REQUEST);
+			}
 		}
+		
+		// java 입출력 io
+		try {
+			// 업로드 파일 경로
+			String saveDirectory = Define.UPLOAD_DIRECTORY;
+			// 폴더가 없다면 오류 발생 -> 미리 폴더 만들어 놓거나
+			
+			// 폴더 만드는 코드 작성
+			File dir = new File(saveDirectory);
+			if(dir.exists() == false) {
+				dir.mkdir(); // 폴더가 없다면 생성
+			}
+			
+			// 파일 이름 (중복 예방 처리)
+			UUID uuid = UUID.randomUUID();
+			// 새로운 파일 이름 생성
+			String fileName = uuid + "_" + file.getOriginalFilename();
+			// 전체 경로 지정 생성
+			String uploadPath = 
+					Define.UPLOAD_DIRECTORY + File.separator + fileName;
+			System.out.println("uploadPath : " + uploadPath);
+			File destination = new File(uploadPath);
+			
+			// 반드시 사용
+			file.transferTo(destination); // 실제 생성
+			
+			// 객체 상태 변경
+			// TODO insert 처리 하기 위함 -> 쿼리 수정해야 함
+			dto.setOriginFileName(file.getOriginalFilename()); // 사용자가 입력한 파일명
+			dto.setUploadFileName(fileName);
+			
+			
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+			// 실제 프로젝트 시 sysout 말고 SLF4JF ? 사용하기
+		}
+		
+//		int resultRowCount = userService.signUp(dto);
+//		if(resultRowCount != 1) {
+//			// 다른 처리
+//		}
+		
+		// 주석 TODO test
+//		userService.signUp(dto);
 		
 		// 여기서부터는 새로운 요청이므로 경로 user부터 다시 적어주어야 함
 		return "redirect:/user/sign-in"; // 로그인 페이지로 이동
