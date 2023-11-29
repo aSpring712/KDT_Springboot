@@ -34,5 +34,10 @@
 	<select id="findAll" resultType="com.tenco.bankapp.repository.entity.User">
 		select * from user_tb
 	</select>
-
+	
+	<!-- username으로 사용자 검색 -->
+	<select id="findByUsername" resultType="com.tenco.bankapp.repository.entity.User">
+		select * from user_tb where username = #{username}
+	</select>
+	
 </mapper>

@@ -53,21 +53,25 @@ public class UserService {
 	}
 
 	public User signIn(SignInFormDto dto) {
+		// 비밀번호 암호화하면서 로직 변경
 		
-		// interface에 정의해주기
-		User userEntity = userRepository.findByUsernameAndPassword(dto);
+//		// interface에 정의해주기
+//		User userEntity = userRepository.findByUsernameAndPassword(dto);
 		
+		// 1. username으로 아이디 존재 여부 확인
+		User userEntity = userRepository.findByUsername(dto);
+		if(userEntity == null) {
+			throw new CustomRestfulException("존재하지 않는 계정입니다", 
+					HttpStatus.BAD_REQUEST);
+		}
+		
+		// 2. 객체 상태값의 비번과 암호화 된 비번 일치 여부 확인
 		// 기능 추가
 		boolean isPwdMatched = passwordEncoder
 				.matches(dto.getPassword(), userEntity.getPassword());
 		
 		if(isPwdMatched == false) {
 			throw new CustomRestfulException("비밀번호가 잘못 되었습니다.", 
-					HttpStatus.BAD_REQUEST);
-		}
-		
-		if(userEntity == null) {
-			throw new CustomRestfulException("아이디 혹은 비밀번호가 틀렸습니다.", 
 					HttpStatus.BAD_REQUEST);
 		}
 		
