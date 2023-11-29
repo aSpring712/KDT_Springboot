@@ -25,7 +25,7 @@ import com.tenco.bankapp.utils.Define;
 @RequestMapping("/user") // URL 주소를 맵핑
 public class UserController {
 	
-	// DI 처리 (아래 DI(의존 주입) 코드 대신)
+	// DI 처리 (아래 DI(의존 주입) 코드 대신) -> DI 시에도 final 적어주는게 성능상 좋으나, 생성자를 직접 생성해야 함
 	@Autowired
 	private UserService userService; // 2. 포함 관계를 위한 선언
 
@@ -126,8 +126,9 @@ public class UserController {
 			
 			
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
-			// 실제 프로젝트 시 sysout 말고 SLF4JF ? 사용하기
+			System.out.println(e.getMessage()); // 동기적
+			// 실제 프로젝트 시 sysout 말고 slf4j ? 사용하기
+			// slf4j -> 비동기적으로 돌아가서 성능적으로 나음
 		}
 		
 //		int resultRowCount = userService.signUp(dto);
@@ -136,7 +137,7 @@ public class UserController {
 //		}
 		
 		// 주석 TODO test
-//		userService.signUp(dto);
+		userService.signUp(dto);
 		
 		// 여기서부터는 새로운 요청이므로 경로 user부터 다시 적어주어야 함
 		return "redirect:/user/sign-in"; // 로그인 페이지로 이동

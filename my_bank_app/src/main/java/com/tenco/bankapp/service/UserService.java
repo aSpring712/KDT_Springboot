@@ -36,6 +36,8 @@ public class UserService {
 //				.password(dto.getPassword())
 				.password(passwordEncoder.encode(dto.getPassword())) // 코드 수정
 				.fullname(dto.getFullname())
+				.uploadFileName(dto.getUploadFileName())
+				.originFileName(dto.getOriginFileName())
 				.build(); // 반드시 마지막에 build() 메서드 호출해야 객체 반환
 //				new User(dto.getUsername(), dto.getPassword(), dto.getFullname()); // 대신 빌더 패턴
 		
