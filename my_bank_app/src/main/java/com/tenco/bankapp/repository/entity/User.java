@@ -21,4 +21,11 @@ public class User {
 	private Timestamp createdAt;
 	private String originFileName;
 	private String uploadFileName;
+	
+	// 기능 : 유저 이미지 set up
+	public String setUpUserImage() {    
+		return uploadFileName == null ? 
+				// 기본 이미지                     // 내가 지정한 경로
+				"https://picsum.photos/id/1/350" : "/images/uploads/" + uploadFileName;
+	}
 }
