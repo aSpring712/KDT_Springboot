@@ -1,6 +1,8 @@
 package com.tenco.bankapp.controller;
 
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import com.tenco.bankapp.dto.response.BoardDto;
 
 // view resorved(return type을 String으로 하면 페이지 반환)를 타게할 것이 아니라 Data를 반환할 것
 @RestController
@@ -83,23 +87,35 @@ public class RestHomeController {
 		headers.add("Content-type", "application/json; charset=UTF-8");
 		
 		// 바디 구성 -> JSON 형식의 데이터를 만들어주는 아이
-		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-		params.add("title", "블로그 포스트 1"); // 어떤 형식으로 데이터를 보낼지는 서버와의 약속
-		params.add("body", "후미진 어느 언덕에서 도시락 소풍");
-		params.add("userId", "1");
+		// LinkedMultiValueMap<>()
+		// params.add("title", "블로그 포스트 1"); // 어떤 형식으로 데이터를 보낼지는 서버와의 약속
+		Map<String, String> params = new HashMap<>();
+		params.put("title", "블로그 포스트 1"); // 어떤 형식으로 데이터를 보낼지는 서버와의 약속
+		params.put("body", "후미진 어느 언덕에서 도시락 소풍");
+		params.put("userId", "1");
 		
 		// 헤더와 바디 결합
-		HttpEntity<MultiValueMap<String, String>> requestMessage
+		HttpEntity<Map<String, String>> requestMessage
 			= new HttpEntity<>(params, headers);
 		//                   body,   header
 		
-		// HTTP 요청 처리 									-- 요청  POST 방식        body            응답은 String class로 받기
-		ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.POST, requestMessage, String.class);
+//		// HTTP 요청 처리 									-- 요청  POST 방식        body            응답은 String class로 받기
+//		// 파싱 처리 해야 원하는 값 꺼내 쓸 수 있음 -> 지금은 그냥 String임
+//		ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.POST, requestMessage, String.class);
+//		//																							 현재는 응답을 String 타입으로 받고있는데 dto로 변환할줄 알아야 함
+		
+		// 파싱
+		ResponseEntity<BoardDto> response = restTemplate.exchange(uri, HttpMethod.POST, requestMessage, BoardDto.class);
+		BoardDto boardDto = response.getBody();
+//		System.out.println(boardDto.getTitle());
 		
 		// 어떻게 오는지 확인
 		// http://localhost:80/exchange-test
+		// 다른 서버에서 넘겨 받은 데이터를 DB에 저장하고자 한다면 
 		System.out.println("headers " + response.getHeaders());
+		System.out.println("TEST : BDTO " + response.getBody());
 		
+//		return ResponseEntity.status(HttpStatus.OK).body(response.getBody());
 		return ResponseEntity.status(HttpStatus.OK).body(response.getBody());
 	}
 	
