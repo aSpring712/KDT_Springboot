@@ -56,6 +56,16 @@ public class UserService {
 		
 		// interface에 정의해주기
 		User userEntity = userRepository.findByUsernameAndPassword(dto);
+		
+		// 기능 추가
+		boolean isPwdMatched = passwordEncoder
+				.matches(dto.getPassword(), userEntity.getPassword());
+		
+		if(isPwdMatched == false) {
+			throw new CustomRestfulException("비밀번호가 잘못 되었습니다.", 
+					HttpStatus.BAD_REQUEST);
+		}
+		
 		if(userEntity == null) {
 			throw new CustomRestfulException("아이디 혹은 비밀번호가 틀렸습니다.", 
 					HttpStatus.BAD_REQUEST);
