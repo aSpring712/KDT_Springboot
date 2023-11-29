@@ -1,8 +1,11 @@
 package com.tenco.bankapp.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+//import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -23,4 +26,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
 //		WebMvcConfigurer.super.addInterceptors(registry);
 	}
 	
+	// security
+	@Bean // Sprinb Container에 들어가는 객체를 Bean이라고 하고 관리해줌, IoC 관리 대상 처리 - 싱글톤
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 }

@@ -38,6 +38,8 @@ dependencies {
 	implementation 'javax.servlet:jstl'
 	// DB 접근 기술
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.3.0' // mybatis 쓰겠다고 설정한 부분
+	// security에서 제공하는 암호화 클래스 사용
+	implementation 'org.springframework.security:spring-security-crypto'
 }
 
 tasks.named('bootBuildImage') {
