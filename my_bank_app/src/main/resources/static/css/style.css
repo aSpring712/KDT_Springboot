@@ -7,6 +7,9 @@
   	width: 100%;
   	height: 200px;
   }
+  .m--nobackground{
+	  background-image: none;
+  }
   .banner--img {
   	background-image: url(https://picsum.photos/600);
   	/* cover: size만큼 펼쳐지게 */

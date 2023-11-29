@@ -69,7 +69,7 @@
 	      <h5>Photo of me:</h5>
 	      <c:choose>
 	      	<c:when test="${principal != null}">
-	      		<img class="m--profile" alt="" src="<c:url value="${principal.setUpUserImage()}"/>">
+	      		<img class="m--profile m--nobackground" alt="" src="<c:url value="${principal.setUpUserImage()}"/>">
 	      	</c:when>
 	      	<c:otherwise>
 		      	<div class="m--profile"></div>
