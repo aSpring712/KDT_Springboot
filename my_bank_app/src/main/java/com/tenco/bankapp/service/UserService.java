@@ -27,14 +27,14 @@ public class UserService {
 //		System.out.println(dto.toString()); // 에러 잡기 위해서 logging
 		
 		// 암호화
-		String rawPwd = dto.getPassword();
-		String hashPwd = passwordEncoder.encode(rawPwd);
-		System.out.println("hashPwd : " + hashPwd);
+//		String rawPwd = dto.getPassword();
+//		String hashPwd = passwordEncoder.encode(rawPwd);
+//		System.out.println("hashPwd : " + hashPwd);
 		
 		User user = User.builder()
 				.username(dto.getUsername())
 //				.password(dto.getPassword())
-				.password(hashPwd)
+				.password(passwordEncoder.encode(dto.getPassword())) // 코드 수정
 				.fullname(dto.getFullname())
 				.build(); // 반드시 마지막에 build() 메서드 호출해야 객체 반환
 //				new User(dto.getUsername(), dto.getPassword(), dto.getFullname()); // 대신 빌더 패턴
