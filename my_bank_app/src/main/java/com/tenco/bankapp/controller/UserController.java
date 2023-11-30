@@ -6,6 +6,7 @@ import java.util.UUID;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -48,6 +49,10 @@ public class UserController {
 	// 세션
 	@Autowired
 	private HttpSession session; // 선언만 했지 new 한적 없으므로 @Autowired해서 가지고 와야 함
+	
+	// 소셜 회원 비밀번호를 위한 초기값 가지고 옴
+	@Value("${tenco.key}") // 메모리에 올라갈 때 yml에 세팅했던 값이 담겨 올라감
+	private String tencoKey;
 
 	// Domain 설계 할 것
 	
@@ -195,7 +200,7 @@ public class UserController {
 	// kakao callback
 	// http://localhost:80/user/kakao-callback?code=
 	@GetMapping("/kakao-callback")
-	@ResponseBody // user controller는 rest아니고 그냥 컨트롤러라서 suffix, prefix에 따라 jsp 찾으러 감 -> 그게 아니라 data를 반환하고 싶을 때 @ResponseBody를 쓰면 됨
+//	@ResponseBody // user controller는 rest아니고 그냥 컨트롤러라서 suffix, prefix에 따라 jsp 찾으러 감 -> 그게 아니라 data를 반환하고 싶을 때 @ResponseBody를 쓰면 됨
 	public String kakaoCallBack(@RequestParam String code) {
 		
 		// 액세스 토큰 요청 --> Server to Server
@@ -260,16 +265,37 @@ public class UserController {
 		
 		KakaoProfile kakaoProfile = response2.getBody();
 		// 회원가입 요청
+		// 소셜 회원 가입자는 전부 비번이 동일하게 된다.
 		SignUpFormDto signUpFormDto = SignUpFormDto
 										.builder()
-										.username("OAuth_" + kakaoProfile.getId() + "님")
-										.fullname("OAuth_" + kakaoProfile.getId() + "님")
-										.password(code)
+										.username("OAuth_" + kakaoProfile.getId() + "_님")
+										.fullname("Kakao")
+										.password(tencoKey) // 절대 유출되면 안되는 값
+										.file(null)
+										.originFileName(null)
+										.uploadFileName(null)
 										.build();
+		
+		// 최초 -> 여기 oldUser가 null인 상태
+		User oldUser = userService.searchUsername(signUpFormDto.getUsername());
+		
+		System.out.println("************************");
+		System.out.println(oldUser);
+		
+		if(oldUser == null) {
+			// oldUser null이라면 최초 회원 가입 처리를 해주어야 함
+			// 회원가입 자동 처리
+			userService.signUp(signUpFormDto); // 회원가입 됨 -> 세션에 담아줘야 함
+//			oldUser.setUsername(signUpFormDto.getUsername());
+//			oldUser.setFullname(signUpFormDto.getFullname());
+			oldUser = userService.searchUsername(signUpFormDto.getUsername());
+		}
 		
 		// 만약 소셜 로그인 사용자가 회원가입 처리 완료된 사용자라면
 		// 바로 세션 처리 및 로그인 처리
+		oldUser.setPassword(null);
+		session.setAttribute(Define.PRINCIPAL, oldUser);
 		
-		return response2.getBody().getProperties().getNickname(); 
+		return "redirect:/account/list"; // controller이기 때문에 view resolved 타게 할 것
 	}
 }

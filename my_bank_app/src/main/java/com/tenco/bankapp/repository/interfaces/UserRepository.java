@@ -25,5 +25,6 @@ public interface UserRepository {
 	public User findByUsernameAndPassword(SignInFormDto dto); // resource mapper > user.xml에 가서 sql 작성
 	
 	// 사용자 이름으로만 조회
-	public User findByUsername(SignInFormDto dto);
+//	public User findByUsername(SignInFormDto dto);
+	public User findByUsername(String username);
 }
