@@ -45,3 +45,5 @@ logging:
   level:
     org.mybatis: DEBUG
     
+tenco:
+  key: 1234567890! # 초기값 선언
