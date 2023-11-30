@@ -6,15 +6,25 @@ import java.util.UUID;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tenco.bankapp.dto.SignInFormDto;
 import com.tenco.bankapp.dto.SignUpFormDto;
+import com.tenco.bankapp.dto.response.OAuthToken;
 import com.tenco.bankapp.handler.exception.CustomRestfulException;
 import com.tenco.bankapp.repository.entity.User;
 import com.tenco.bankapp.service.UserService;
@@ -179,5 +189,50 @@ public class UserController {
 	public String logout() {
 		session.invalidate();
 		return "redirect:/user/sign-in";
+	}
+	
+	// kakao callback
+	// http://localhost:80/user/kakao-callback?code=
+	@GetMapping("/kakao-callback")
+	@ResponseBody // user controller는 rest아니고 그냥 컨트롤러라서 suffix, prefix에 따라 jsp 찾으러 감 -> 그게 아니라 data를 반환하고 싶을 때 @ResponseBody를 쓰면 됨
+	public String kakaoCallBack(@RequestParam String code) {
+		
+		// 액세스 토큰 요청 --> Server to Server
+		
+		RestTemplate rt1 = new RestTemplate();
+		// 헤더 구성
+		HttpHeaders headers1 = new HttpHeaders();
+		headers1.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+		// body 구성
+		MultiValueMap<String, String> params1 = new LinkedMultiValueMap<>();
+		params1.add("grant_type", "authorization_code");
+		params1.add("client_id", "9a0461212c8acc6edf4b165840c3cb7d");
+		params1.add("redirect_uri", "http://localhost/user/kakao-callback");
+		params1.add("code", code);
+		
+		// 헤더 + body 결합
+		HttpEntity<MultiValueMap<String, String>> requestMsg1
+			= new HttpEntity<>(params1, headers1);
+		
+		// 카카오 서버에 요청 처리
+//		ResponseEntity<String> response1 = rt1.exchange("https://kauth.kakao.com/oauth/token", HttpMethod.POST, 
+//				requestMsg1, String.class);
+		ResponseEntity<OAuthToken> response1 = rt1.exchange("https://kauth.kakao.com/oauth/token", HttpMethod.POST, 
+				requestMsg1, OAuthToken.class);
+		
+		System.out.println("===================================");
+		System.out.println(response1.getHeaders());
+		System.out.println(response1.getBody());
+		
+		System.out.println(response1.getBody().getAccessToken());
+		System.out.println(response1.getBody().getRefreshToken());
+		System.out.println("===================================");
+		// ============ 여기까지 access token(정상적인 사용자다) 받기 위함 =============== //
+		
+		// ============ 프로필 이미지 등 받아오기 ============ //
+		
+		System.out.println("메서드 동작 확인 ");
+		
+		return "xxxx"; 
 	}
 }

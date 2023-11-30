@@ -21,6 +21,8 @@
 		    	placeholder="Enter password" id="pwd" name="password" value="1234">
 		  </div>
 		  <button type="submit" class="btn btn-primary">로그인</button>
+		  <!-- 여기서 / 하면 static이 root -->
+		  <a href="https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=9a0461212c8acc6edf4b165840c3cb7d&redirect_uri=http://localhost/user/kakao-callback"><img alt="" src="/images/kakao_login_medium.png" width="75" height="40" /></a>
 		</form>
 		
       </div>
