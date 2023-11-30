@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.tenco.bankapp.dto.SignInFormDto;
 import com.tenco.bankapp.dto.SignUpFormDto;
+import com.tenco.bankapp.dto.response.KakaoProfile;
 import com.tenco.bankapp.dto.response.OAuthToken;
 import com.tenco.bankapp.handler.exception.CustomRestfulException;
 import com.tenco.bankapp.repository.entity.User;
@@ -244,15 +245,31 @@ public class UserController {
 			= new HttpEntity<>(headers2); 
 		
 		// 요청
-		ResponseEntity<String> response2 = rt2.exchange("https://kapi.kakao.com/v2/user/me", HttpMethod.POST, requestMsg2, String.class);
+		ResponseEntity<KakaoProfile> response2 = rt2.exchange("https://kapi.kakao.com/v2/user/me", HttpMethod.POST, requestMsg2, KakaoProfile.class);
 		
 		System.out.println("===================================");
-		System.out.println(response2.getHeaders());
-		System.out.println(response2.getBody());
+		System.out.println(response2.getBody().getProperties().getNickname());
 		System.out.println("===================================");
 		
 		// ============ 여기까지 카카오 서버에 존재하는 정보 요청 처리 ============ //
+		System.out.println("================== 카카오 서버 정보 받기 완료 ==================");
 		
-		return response2.getBody(); 
+		// 1. 회원 가입 여부 확인(이 카카오 계정으로)
+		// - 최초 사용자라면 우리 사이트에 회원가입을 (자동) 완료 시켜야 함
+		// - 추가 정보 입력 화면 -> 카카오 서버에서 제공하지 않는 추가 정보가 있다면 기능을 만들기 --> DB 저장 처리
+		
+		KakaoProfile kakaoProfile = response2.getBody();
+		// 회원가입 요청
+		SignUpFormDto signUpFormDto = SignUpFormDto
+										.builder()
+										.username("OAuth_" + kakaoProfile.getId() + "님")
+										.fullname("OAuth_" + kakaoProfile.getId() + "님")
+										.password(code)
+										.build();
+		
+		// 만약 소셜 로그인 사용자가 회원가입 처리 완료된 사용자라면
+		// 바로 세션 처리 및 로그인 처리
+		
+		return response2.getBody().getProperties().getNickname(); 
 	}
 }

@@ -2,10 +2,16 @@ package com.tenco.bankapp.dto;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 //Data를 담기 위해 Setter가 필요
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class SignUpFormDto {
 	
 	// name 태그에 적은것과 매칭시켜서 적기			
