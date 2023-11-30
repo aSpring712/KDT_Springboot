@@ -229,10 +229,30 @@ public class UserController {
 		System.out.println("===================================");
 		// ============ 여기까지 access token(정상적인 사용자다) 받기 위함 =============== //
 		
-		// ============ 프로필 이미지 등 받아오기 ============ //
 		
-		System.out.println("메서드 동작 확인 ");
+		// ============ access token을 가지고 사용자 정보(프로필 이미지 등) 받아오기 ============ //
+		RestTemplate rt2 = new RestTemplate();
+		// 헤더 구성
+		HttpHeaders headers2 = new HttpHeaders();
+		headers2.add("Authorization", "Bearer " + response1.getBody().getAccessToken());
+		headers2.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 		
-		return "xxxx"; 
+		// 바디 구성 생략(필수 아님)
+		
+		// 헤더 바디 결합
+		HttpEntity<MultiValueMap<String, String>> requestMsg2 
+			= new HttpEntity<>(headers2); 
+		
+		// 요청
+		ResponseEntity<String> response2 = rt2.exchange("https://kapi.kakao.com/v2/user/me", HttpMethod.POST, requestMsg2, String.class);
+		
+		System.out.println("===================================");
+		System.out.println(response2.getHeaders());
+		System.out.println(response2.getBody());
+		System.out.println("===================================");
+		
+		// ============ 여기까지 카카오 서버에 존재하는 정보 요청 처리 ============ //
+		
+		return response2.getBody(); 
 	}
 }
